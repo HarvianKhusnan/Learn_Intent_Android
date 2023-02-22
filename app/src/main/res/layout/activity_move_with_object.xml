@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MoveWithDataActivity"
+    tools:context=".MoveWithObjectActivity"
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/tv_data_received"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/object_received" />
+        android:id="@+id/tv_object_received"
+        android:text="@string/object_received"/>
 
 </RelativeLayout>
