@@ -6,8 +6,31 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
+
+    private lateinit var tvResult: TextView
+    private val resultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == MoveForResultActivity.RESULT_CODE && result.data != null) {
+            val selectedValue =
+                result.data?.getIntExtra(MoveForResultActivity.EXTRA_SELECTED_VALUE,0)
+            tvResult.text = "Hasil : $selectedValue"
+        }
+
+        /*
+        Untuk membuat activity yang dapat mengembalikan nilai menggunakan intent, kita perlu membuat objek
+        ActivityResultLauncher seperti diatas dan untuk mendapatkan hasil dari intent, kita perlu menggunakan
+        kode registerForActivityResult dan parameter ActivityResulrContract
+         */
+
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -23,6 +46,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         val btnDialPhone: Button = findViewById(R.id.btn_dial_number)
         btnDialPhone.setOnClickListener(this)
+
+        val btnMoveForResultActivity:Button = findViewById(R.id.btn_move_for_result)
+        btnMoveForResultActivity.setOnClickListener(this)
+
+        tvResult = findViewById(R.id.tv_result)
+
+
     }
 
     override fun onClick(v: View?) {
@@ -64,6 +94,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val phoneNumber = "081283018984"
                 val dialPhoneIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:$phoneNumber"))
                 startActivity(dialPhoneIntent)
+            }
+
+            R.id.btn_move_for_result -> {
+                val moveResultIntent = Intent(this@MainActivity, MoveForResultActivity::class.java)
+                resultLauncher.launch(moveResultIntent)
+
+                /*
+                Perbedaan intent yang akan mengembalikan hasil dengan intent biasa adalah Intent biasa menggunakan
+                kode startActivity() yang dimana akan melakukan perpindahan saja, berbeda dengan intent yang menggunakan
+                launch() dimana intent tersebut akan mengirim hasil atau umpan balik ketika intent dijalankan, misalnya
+                pada tampilan android, ketika kita memilih angka 100 maka angka tersebut akan dikirim ke main activity.
+                 */
             }
         }
     }
